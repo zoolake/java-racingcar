@@ -1,35 +1,32 @@
 package racing;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import racing.rule.RandomMoveRule;
+import racing.rule.FixedValueMoveRule;
+import racing.rule.MoveRule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RacingGameTest {
-    private static RandomMoveRule randomMoveRule;
-
-    @BeforeAll
-    public static void setUp() {
-        randomMoveRule = new RandomMoveRule();
-    }
 
     @ParameterizedTest
-    @ValueSource(ints = {RandomMoveRule.MIN_MOVE_VALUE, RandomMoveRule.MIN_MOVE_VALUE + 2})
+    @ValueSource(ints = {MoveRule.MIN_MOVE_VALUE, MoveRule.MIN_MOVE_VALUE + 2})
     @DisplayName("value가 MIN_MOVE_VALUE 이상이면 전진 가능하다.")
     public void car_moves_whenValueIs_MinMoveValueOrMore(int input) {
-        boolean actual = randomMoveRule.isMovable(input);
+        MoveRule moveRule = new FixedValueMoveRule(input);
+
+        boolean actual = moveRule.isMovable();
         assertThat(actual).isTrue();
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {RandomMoveRule.MIN_MOVE_VALUE - 1, RandomMoveRule.MIN_MOVE_VALUE - 2})
+    @ValueSource(ints = {MoveRule.MIN_MOVE_VALUE - 1, MoveRule.MIN_MOVE_VALUE - 2})
     @DisplayName("value가 MIN_MOVE_VALUE 미만이면 움직이지 않는다.")
     public void car_stays_whenValueIs_LessThanMinMoveValue(int input) {
-        boolean actual = randomMoveRule.isMovable(input);
+        MoveRule moveRule = new FixedValueMoveRule(input);
+
+        boolean actual = moveRule.isMovable();
         assertThat(actual).isFalse();
     }
 

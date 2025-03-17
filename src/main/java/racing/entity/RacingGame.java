@@ -1,25 +1,25 @@
 package racing.entity;
 
-import racing.generator.CarsGenerator;
-import racing.rule.RandomMoveRule;
+import racing.rule.MoveRule;
 import racing.view.RacingGameOutputView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RacingGame {
     private final int carCount;
     private final int roundCount;
-    private final RandomMoveRule randomMoveRule;
+    private final MoveRule moveRule;
 
-    public RacingGame(int carCount, int roundCount, RandomMoveRule randomMoveRule) {
+    public RacingGame(int carCount, int roundCount, MoveRule moveRule) {
         this.carCount = carCount;
         this.roundCount = roundCount;
-        this.randomMoveRule = randomMoveRule;
+        this.moveRule = moveRule;
     }
 
     // 레이싱 게임 진행 (자동차 리스트 생성 => RoundCount 만큼 라운드 진행)
     public void playRacingGame() {
-        RacingCars racingCars = new RacingCars(CarsGenerator.generateCars(carCount));
+        RacingCars racingCars = new RacingCars(generateCars(carCount));
 
         RacingGameOutputView.printOutputHeadMessage();
 
@@ -33,10 +33,19 @@ public class RacingGame {
     private void playRound(RacingCars racingCars) {
         List<Car> cars = racingCars.getCars();
         for (Car car : cars) {
-            if (randomMoveRule.isMovableByRandomValue()) {
+            if (moveRule.isMovable()) {
                 car.move();
             }
         }
+    }
+
+    private static List<Car> generateCars(int carCount) {
+        List<Car> cars = new ArrayList<>();
+        for (int i = 0; i < carCount; i++) {
+            cars.add(new Car());
+        }
+
+        return cars;
     }
 
 }
